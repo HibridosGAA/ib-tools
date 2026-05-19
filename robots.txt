@@ -1,0 +1,8 @@
+# robots.txt — IB Toolkit
+# Generado para Render deployment
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://ib-toolkit.onrender.com/sitemap.xml

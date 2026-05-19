@@ -1,0 +1,16 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+*.suo
+*.user
+
+# Dependencias (si usas npm en el futuro)
+node_modules/
+.env
+
+# Build outputs
+dist/
+build/
