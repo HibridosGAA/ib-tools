@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- SEO Meta Tags -->
-  <title>IB Toolkit — Herramientas para tu Preparación IB</title>
+  <title>IB Tool — Herramientas para tu Preparación IB p</title>
   <meta name="description" content="Colección curada de herramientas esenciales para estudiantes del Bachillerato Internacional. Accede a recursos de matemáticas, biología, idiomas, programación y más." />
   <meta name="keywords" content="IB, International Baccalaureate, herramientas IB, recursos IB, bachillerato internacional, Clastify, Classpad, Blockly, ELTNGL" />
-  <meta name="author" content="IB Toolkit" />
+  <meta name="author" content="IB Tool" />
   <meta name="robots" content="index, follow" />
 
   <!-- Open Graph / Social -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="IB Toolkit — Herramientas para tu Preparación IB" />
+  <meta property="og:title" content="IB Tool — Herramientas para tu Preparación IB" />
   <meta property="og:description" content="Todos los recursos que necesitas para sobresalir en el Bachillerato Internacional, en un solo lugar." />
   <meta property="og:url" content="https://ib-toolkit.onrender.com" />
 
@@ -26,6 +26,29 @@
 </head>
 <body>
 
+  <!-- ============================================
+       CAPTCHA MODAL — Backyardigans
+       ============================================ -->
+  <div id="captcha-overlay" class="captcha-overlay">
+    <div class="captcha-box">
+      <div class="captcha-logo">
+        <span class="logo-mark">CTM</span>
+        <span class="logo-text"></span>
+      </div>
+      <p class="captcha-instruction">Antes de entrar, demuestra que no eres therian</p>
+      <div class="captcha-challenge">
+        <p class="captcha-question" id="captcha-question">¿Quién es...?</p>
+        <div class="captcha-grid" id="captcha-grid"></div>
+      </div>
+      <p class="captcha-feedback" id="captcha-feedback"></p>
+      <div class="captcha-progress">
+        <span class="dot active" id="dot-0"></span>
+        <span class="dot" id="dot-1"></span>
+        <span class="dot" id="dot-2"></span>
+      </div>
+    </div>
+  </div>
+
   <!-- Background decoration -->
   <div class="bg-grid"></div>
   <div class="bg-orb orb-1"></div>
@@ -36,24 +59,41 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="logo">
-        <span class="logo-mark">IB</span>
-        <span class="logo-text">Toolkit</span>
+        <span class="logo-mark">CTM</span>
+        <span class="logo-text"></span>
       </div>
-      <p class="header-tagline">Tus recursos. Un solo lugar.</p>
+        <img 
+            src="assets/maquina1.jpeg"
+            alt="A toda maquina sobrino."
+            class="header-logo"
+            width="150" 
+            height="150"
+            onerror="this.style.display='none'; document.getElementById('hero-title-fallback').style.display='block';"
+        />
+
     </div>
   </header>
 
   <!-- Hero -->
   <section class="hero">
     <div class="hero-inner">
-      <p class="hero-label">Bachillerato Internacional</p>
-      <h1 class="hero-title">
-        Herramientas para<br />
-        <em>dominar el IB</em>
-      </h1>
+      <p class="hero-label">gaaaaa</p>
+
+      <!-- TITLE IMAGE (sube assets/title1.png) -->
+      <div class="hero-title-img-wrap">
+        <img
+          src="assets/title1.jpg"
+          alt="Herramientas p ta duro el IB"
+          class="hero-title-img"
+          onerror="this.style.display='none'; document.getElementById('hero-title-fallback').style.display='block';"
+        />
+        <h1 class="hero-title" id="hero-title-fallback" style="display:none;">
+          Herramientas p<br /><em>ta duro el IB</em>
+        </h1>
+      </div>
+
       <p class="hero-sub">
-        Accede a la biblioteca oficial del IBO, calculadoras, IAs de ejemplo,
-        idiomas, programación y biología — todo curado para tu éxito.
+        Accede a lo que conozco noma
       </p>
     </div>
   </section>
@@ -65,85 +105,85 @@
       <!-- Card 1 -->
       <a class="tool-card" href="https://www.ibo.org/become-an-ib-school/useful-resources/resource-library/" target="_blank" rel="noopener noreferrer" data-category="Oficial">
         <div class="card-glow"></div>
-        <div class="card-icon">📚</div>
+        <div class="card-icon">CTM</div>
         <div class="card-body">
-          <span class="card-tag">IBO Oficial</span>
+          <span class="card-tag">IB</span>
           <h2 class="card-title">Resource Library</h2>
-          <p class="card-desc">Biblioteca oficial de recursos del IBO. Guías, políticas y materiales autorizados para todos los programas.</p>
+          <p class="card-desc">Biblioteca oficial del IB.</p>
         </div>
-        <span class="card-arrow">→</span>
+        <span class="card-arrow"></span>
       </a>
 
       <!-- Card 2 -->
       <a class="tool-card" href="https://classpad.net/note/#/tools/math" target="_blank" rel="noopener noreferrer" data-category="Matemáticas">
         <div class="card-glow"></div>
-        <div class="card-icon">🧮</div>
+        <div class="card-icon">CTM</div>
         <div class="card-body">
-          <span class="card-tag">Matemáticas</span>
+          <span class="card-tag">Mate</span>
           <h2 class="card-title">Classpad Math</h2>
-          <p class="card-desc">Calculadora científica y CAS online. Ideal para IB Math AA y AI, con funciones gráficas avanzadas.</p>
+          <p class="card-desc">Calcu.</p>
         </div>
-        <span class="card-arrow">→</span>
+        <span class="card-arrow"></span>
       </a>
 
       <!-- Card 3 -->
       <a class="tool-card" href="https://www.clastify.com/ia" target="_blank" rel="noopener noreferrer" data-category="IAs">
         <div class="card-glow"></div>
-        <div class="card-icon">📝</div>
+        <div class="card-icon">CTM</div>
         <div class="card-body">
           <span class="card-tag">Internal Assessment</span>
           <h2 class="card-title">Clastify IA</h2>
-          <p class="card-desc">Ejemplos reales de IAs calificadas. Aprende de trabajos con notas altas para todas las materias del IB.</p>
+          <p class="card-desc">Sirve.</p>
         </div>
-        <span class="card-arrow">→</span>
+        <span class="card-arrow"></span>
       </a>
 
       <!-- Card 4 -->
       <a class="tool-card" href="https://learn.eltngl.com/dashboard/practice" target="_blank" rel="noopener noreferrer" data-category="Idiomas">
         <div class="card-glow"></div>
-        <div class="card-icon">🌐</div>
+        <div class="card-icon">CTM</div>
         <div class="card-body">
-          <span class="card-tag">Idiomas</span>
+          <span class="card-tag">INGLES P</span>
           <h2 class="card-title">ELT NGL Practice</h2>
-          <p class="card-desc">Plataforma de práctica de inglés de National Geographic Learning. Perfecta para Language & Literature.</p>
+          <p class="card-desc">ENGLISH.</p>
         </div>
-        <span class="card-arrow">→</span>
+        <span class="card-arrow"></span>
       </a>
 
       <!-- Card 5 -->
       <a class="tool-card" href="https://blockly.games/?lang=en" target="_blank" rel="noopener noreferrer" data-category="Programación">
         <div class="card-glow"></div>
-        <div class="card-icon">🧩</div>
+        <div class="card-icon">CTM</div>
         <div class="card-body">
-          <span class="card-tag">Computer Science</span>
+          <span class="card-tag">JUEGUITO</span>
           <h2 class="card-title">Blockly Games</h2>
-          <p class="card-desc">Aprende pensamiento computacional con bloques visuales. Esencial para IB Computer Science y Theory of Knowledge.</p>
+          <p class="card-desc">Program a un pajaro.</p>
         </div>
-        <span class="card-arrow">→</span>
+        <span class="card-arrow"></span>
       </a>
 
       <!-- Card 6 -->
       <a class="tool-card" href="https://www.biologyforlife.com/" target="_blank" rel="noopener noreferrer" data-category="Ciencias">
         <div class="card-glow"></div>
-        <div class="card-icon">🔬</div>
+        <div class="card-icon">CTM</div>
         <div class="card-body">
           <span class="card-tag">Biología</span>
           <h2 class="card-title">Biology for Life</h2>
-          <p class="card-desc">Recursos completos para IB Biology. Notas, esquemas, videos y preguntas de práctica por tema.</p>
+          <p class="card-desc">No más -3.</p>
         </div>
-        <span class="card-arrow">→</span>
+        <span class="card-arrow"></span>
       </a>
 
       <!-- Card 7 -->
       <a class="tool-card tool-card--wide" href="https://wayground.com/join" target="_blank" rel="noopener noreferrer" data-category="Comunidad">
         <div class="card-glow"></div>
-        <div class="card-icon">🤝</div>
+        <div class="card-icon">CTM</div>
         <div class="card-body">
-          <span class="card-tag">Comunidad</span>
+          <span class="card-tag">Quizisssss</span>
           <h2 class="card-title">Wayground</h2>
-          <p class="card-desc">Únete a una comunidad de estudiantes IB. Comparte recursos, encuentra tutores y colabora con pares de todo el mundo.</p>
+          <p class="card-desc">Llegó el momento.</p>
         </div>
-        <span class="card-arrow">→</span>
+        <span class="card-arrow"></span>
       </a>
 
     </div>
@@ -151,9 +191,11 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <p>Hecho con 💛 para estudiantes IB &nbsp;·&nbsp; <span id="year"></span></p>
+    <p>Con fe progresa la pagina progresa</p>
   </footer>
 
+  <script src="js/captcha.js"></script>
+  <script src="js/tracker.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

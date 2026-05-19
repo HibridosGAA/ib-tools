@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTM — Registro de Visitas | IB Toolkit</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:       #000000;
+      --surface:  #0a0a0a;
+      --border:   rgba(255,255,255,0.08);
+      --gold:     #c9a84c;
+      --green:    #6be8a8;
+      --red:      #e86b6b;
+      --text:     #e8e6e0;
+      --muted:    #7a7870;
+      --dim:      #3a3830;
+      --mono:     'DM Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    /* ── Lock screen ─────────────────────────── */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      z-index: 999;
+    }
+
+    #lock-screen h2 {
+      font-family: var(--sans);
+      font-size: 1.1rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .lock-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      border: 2px solid var(--gold);
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    #pin-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      letter-spacing: 0.5em;
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+      text-align: center;
+      width: 200px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #pin-input:focus { border-color: var(--gold); }
+
+    #lock-btn {
+      background: var(--gold);
+      color: #0b0c10;
+      border: none;
+      padding: 0.75rem 2.5rem;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    #lock-btn:hover { opacity: 0.85; }
+
+    #lock-error {
+      color: var(--red);
+      font-size: 0.85rem;
+      min-height: 1.2em;
+    }
+
+    /* ── Dashboard ───────────────────────────── */
+    #dashboard { display: none; padding: 2rem; }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .dash-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dash-logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      border: 2px solid var(--gold);
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+    }
+
+    .dash-title h1 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .dash-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1.1rem;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-ghost { background: transparent; color: var(--muted); }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-danger { background: transparent; color: var(--red); border-color: rgba(232,107,107,0.3); }
+    .btn-danger:hover { background: rgba(232,107,107,0.1); }
+    .btn-export { background: var(--gold); color: #0b0c10; border-color: var(--gold); font-weight: 600; }
+    .btn-export:hover { opacity: 0.85; }
+
+    /* ── Stats cards ─────────────────────────── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--gold);
+      font-family: var(--mono);
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ── Table ───────────────────────────────── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-toolbar h2 {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #search-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      outline: none;
+      width: 200px;
+      transition: border-color 0.2s;
+    }
+    #search-input:focus { border-color: var(--gold); }
+    #search-input::placeholder { color: var(--dim); }
+
+    .visits-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .visits-table th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .visits-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .visits-table tr:last-child td { border-bottom: none; }
+    .visits-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      font-family: var(--mono);
+    }
+
+    .badge-os    { background: rgba(74,143,232,0.15); color: #4a8fe8; }
+    .badge-br    { background: rgba(107,232,168,0.12); color: var(--green); }
+    .badge-id    { background: rgba(201,168,76,0.1); color: var(--gold); letter-spacing: 0.05em; }
+
+    .mono { font-family: var(--mono); color: var(--muted); font-size: 0.78rem; }
+
+    .visit-num {
+      font-family: var(--mono);
+      color: var(--dim);
+      font-size: 0.75rem;
+    }
+
+    #empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+    #empty-state p { font-size: 0.9rem; }
+    #empty-state .big { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+    /* Scrollable on small screens */
+    .table-scroll { overflow-x: auto; }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Lock Screen ─────────────────────────────────── -->
+  <div id="lock-screen">
+    <span class="lock-logo">CTM</span>
+    <h2>Acceso restringido</h2>
+    <input type="password" id="pin-input" placeholder="••••" maxlength="10" autocomplete="off" />
+    <button class="btn btn-export" id="lock-btn">Entrar</button>
+    <span id="lock-error"></span>
+  </div>
+
+  <!-- ── Dashboard ───────────────────────────────────── -->
+  <div id="dashboard">
+
+    <div class="dash-header">
+      <div class="dash-title">
+        <span class="dash-logo">CTM</span>
+        <h1>VISITAS<span style="color:var(--muted)">/ CTM</span></h1>
+      </div>
+      <div class="dash-actions">
+        <a href="index.html" class="btn btn-ghost back-link">Volver</a>
+        <button class="btn btn-export" onclick="exportCSV()">Exportar CSV</button>
+        <button class="btn btn-danger" onclick="clearAll()">Borrar todo</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <p class="stat-label">Total visitas</p>
+        <p class="stat-value" id="stat-total">0</p>
+        <p class="stat-sub">desde el inicio</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Dispositivos únicos</p>
+        <p class="stat-value" id="stat-unique">0</p>
+        <p class="stat-sub">IDs distintos</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Última visita</p>
+        <p class="stat-value" style="font-size:1.1rem;padding-top:0.5rem" id="stat-last">—</p>
+        <p class="stat-sub" id="stat-last-time">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">SO más frecuente</p>
+        <p class="stat-value" style="font-size:1.1rem;padding-top:0.5rem" id="stat-os">—</p>
+        <p class="stat-sub" id="stat-os-count">—</p>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <h2>Historial</h2>
+        <input type="text" id="search-input" placeholder="Buscar por OS, navegador, ID…" oninput="renderTable()" />
+      </div>
+      <div class="table-scroll">
+        <table class="visits-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Dispositivo ID</th>
+              <th>Sistema Op.</th>
+              <th>Navegador</th>
+              <th>Pantalla</th>
+              <th>Idioma</th>
+              <th>Zona horaria</th>
+            </tr>
+          </thead>
+          <tbody id="visits-tbody"></tbody>
+        </table>
+        <div id="empty-state" style="display:none;">
+          <p class="big"></p>
+          <p>No hay visitas registradas todavía.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Contraseña de acceso ──────────────────────────────
+    // Cámbiala aquí: es la clave para ver el dashboard
+    const ACCESS_PIN = '1234';
+
+    const STORE_KEY = 'ib_visits';
+    let allVisits   = [];
+
+    // ── Lock screen ───────────────────────────────────────
+    document.getElementById('pin-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPin();
+    });
+    document.getElementById('lock-btn').addEventListener('click', checkPin);
+
+    function checkPin() {
+      const val = document.getElementById('pin-input').value;
+      if (val === ACCESS_PIN) {
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display   = 'block';
+        loadData();
+      } else {
+        const err = document.getElementById('lock-error');
+        err.textContent = 'PIN incorrecto ❌';
+        document.getElementById('pin-input').value = '';
+        setTimeout(() => { err.textContent = ''; }, 2000);
+      }
+    }
+
+    // ── Cargar datos ──────────────────────────────────────
+    function loadData() {
+      try {
+        allVisits = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+      } catch { allVisits = []; }
+      renderStats();
+      renderTable();
+    }
+
+    // ── Stats ─────────────────────────────────────────────
+    function renderStats() {
+      document.getElementById('stat-total').textContent = allVisits.length;
+
+      const unique = new Set(allVisits.map(v => v.id)).size;
+      document.getElementById('stat-unique').textContent = unique;
+
+      if (allVisits.length) {
+        const last = allVisits[allVisits.length - 1];
+        document.getElementById('stat-last').textContent      = last.fecha;
+        document.getElementById('stat-last-time').textContent = last.hora;
+      }
+
+      // OS más frecuente
+      const osCounts = allVisits.reduce((acc, v) => {
+        acc[v.os] = (acc[v.os] || 0) + 1; return acc;
+      }, {});
+      const topOs = Object.entries(osCounts).sort((a,b) => b[1]-a[1])[0];
+      if (topOs) {
+        document.getElementById('stat-os').textContent       = topOs[0];
+        document.getElementById('stat-os-count').textContent = `${topOs[1]} visita${topOs[1]>1?'s':''}`;
+      }
+    }
+
+    // ── Tabla ─────────────────────────────────────────────
+    function renderTable() {
+      const query  = document.getElementById('search-input').value.toLowerCase();
+      const tbody  = document.getElementById('visits-tbody');
+      const empty  = document.getElementById('empty-state');
+
+      // Filtrar y mostrar en orden más reciente primero
+      const filtered = [...allVisits]
+        .reverse()
+        .filter(v =>
+          !query ||
+          v.os.toLowerCase().includes(query)     ||
+          v.browser.toLowerCase().includes(query)||
+          v.id.toLowerCase().includes(query)     ||
+          v.idioma.toLowerCase().includes(query) ||
+          v.zona.toLowerCase().includes(query)
+        );
+
+      if (!filtered.length) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      const total = allVisits.length;
+      tbody.innerHTML = filtered.map((v, i) => `
+        <tr>
+          <td class="visit-num">${total - i}</td>
+          <td class="mono">${v.fecha}</td>
+          <td class="mono">${v.hora}</td>
+          <td><span class="badge badge-id">${v.id}</span></td>
+          <td><span class="badge badge-os">${v.os}</span></td>
+          <td><span class="badge badge-br">${v.browser}</span></td>
+          <td class="mono">${v.pantalla}</td>
+          <td class="mono">${v.idioma}</td>
+          <td class="mono">${v.zona}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ── Exportar CSV ──────────────────────────────────────
+    function exportCSV() {
+      if (!allVisits.length) return alert('No hay datos para exportar.');
+      const headers = ['#','fecha','hora','id','os','browser','pantalla','idioma','zona','iso'];
+      const rows    = allVisits.map((v, i) =>
+        [i+1, v.fecha, v.hora, v.id, v.os, v.browser, v.pantalla, v.idioma, v.zona, v.iso]
+          .map(c => `"${c}"`).join(',')
+      );
+      const csv  = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = Object.assign(document.createElement('a'), { href: url, download: 'ib_visitas.csv' });
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ── Borrar todo ───────────────────────────────────────
+    function clearAll() {
+      if (!confirm('¿Borrar TODOS los registros? Esta acción no se puede deshacer.')) return;
+      localStorage.removeItem(STORE_KEY);
+      allVisits = [];
+      renderStats();
+      renderTable();
+    }
+  </script>
+</body>
+</html>
