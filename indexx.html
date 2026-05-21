@@ -23,7 +23,110 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+
+    .pq-hub-wrap {
+      position: relative; z-index: 5;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 3rem 2rem; gap: 3rem;
+    }
+    .pq-hub-header {
+      text-align: center;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+    .pq-hub-label {
+      font-size: 0.7rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #6bcfb0;
+      margin-bottom: 0.5rem;
+    }
+    .pq-hub-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 600; color: #e8e6e0; line-height: 1.1;
+    }
+    .pq-hub-title em { font-style: italic; color: #6bcfb0; }
+    .pq-hub-sub {
+      font-size: 0.85rem; color: #7a7870;
+      margin-top: 0.75rem; letter-spacing: 0.02em;
+    }
+    .pq-hub-nav {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.25rem; width: 100%; max-width: 600px;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.3s;
+    }
+    .pq-btn {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: flex-start; gap: 0.6rem;
+      padding: 2rem 1.75rem;
+      background: #0e0e0e;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      text-decoration: none; color: inherit; overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pq-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .pq-btn-a:hover { border-color: #6bcfb0; }
+    .pq-btn-b:hover { border-color: #b06be8; }
+    .pq-btn::before {
+      content: ''; position: absolute;
+      left: 0; top: 15%; bottom: 15%; width: 3px;
+      border-radius: 0 3px 3px 0; opacity: 0;
+      transition: opacity 0.3s ease, top 0.3s ease, bottom 0.3s ease;
+    }
+    .pq-btn-a::before { background: #6bcfb0; }
+    .pq-btn-b::before { background: #b06be8; }
+    .pq-btn:hover::before { opacity: 1; top: 8%; bottom: 8%; }
+    .pq-btn-icon { font-size: 2rem; line-height: 1; }
+    .pq-btn-tag {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .pq-btn-a .pq-btn-tag { color: #6bcfb0; }
+    .pq-btn-b .pq-btn-tag { color: #b06be8; }
+    .pq-btn-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.6rem; font-weight: 600;
+      color: #e8e6e0; line-height: 1.2;
+      transition: color 0.3s ease;
+    }
+    .pq-btn-a:hover .pq-btn-title { color: #6bcfb0; }
+    .pq-btn-b:hover .pq-btn-title { color: #b06be8; }
+    .pq-btn-desc { font-size: 0.82rem; color: #7a7870; line-height: 1.5; }
+    .pq-btn-arrow {
+      position: absolute; bottom: 1.25rem; right: 1.25rem;
+      font-size: 1rem; color: #3a3830;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .pq-btn-a:hover .pq-btn-arrow { transform: translate(3px,-3px); color: #6bcfb0; }
+    .pq-btn-b:hover .pq-btn-arrow { transform: translate(3px,-3px); color: #b06be8; }
+    .back-link {
+      position: absolute; 
+      top: 2rem; 
+      left: 2rem;
+      z-index: 100; /* Lo pone por encima de todo */
+      color: #7a7870; 
+      font-size: 0.82rem; 
+      text-decoration: none;
+      letter-spacing: 0.04em; 
+      transition: color 0.2s;
+      opacity: 1; /* Lo hace visible inmediatamente */
+    }.5s ease forwards 0s;
+    
+    .back-link:hover { color: #fff; }
+    @media (max-width: 520px) {
+      .pq-hub-nav { grid-template-columns: 1fr; max-width: 320px; }
+      .back-link { position: static; margin-bottom: 1rem; }
+    }
+
+  </style>
+
 </head>
+
 <body>
 
   <!-- ============================================
@@ -48,6 +151,8 @@
       </div>
     </div>
   </div>
+  
+  <a href="general.html" class="back-link">← Volver</a>
 
   <!-- Background decoration -->
   <div class="bg-grid"></div>
