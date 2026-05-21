@@ -1,3 +1,8 @@
+// =========================================
+//  IB TOOLKIT — js/captcha.js
+//  CAPTCHA con Los Backyardigans 🎉
+// =========================================
+
 const CHARACTERS = [
   { name: 'Uniqua',  file: 'assets/b1.png' },
   { name: 'Pablo',   file: 'assets/b2.jpg' },
@@ -6,11 +11,18 @@ const CHARACTERS = [
   { name: 'Tasha',   file: 'assets/b5.jpg' },
 ];
 
-// 3 rondas, cada una pide un personaje diferente al azar
 const TOTAL_ROUNDS = 3;
 let currentRound  = 0;
 let usedTargets   = [];
 let currentTarget = null;
+
+// ── Leer cookie ──────────────────────────────────────────
+function getCookie(name) {
+  return document.cookie.split('; ').reduce((acc, part) => {
+    const [k, v] = part.split('=');
+    return k === name ? decodeURIComponent(v) : acc;
+  }, null);
+}
 
 // ── Utilidades ──────────────────────────────────────────
 function shuffle(arr) {
@@ -26,7 +38,7 @@ function updateDots() {
   }
 }
 
-// ── Renderizar una ronda ─────────────────────────────────
+// ── Renderizar una ronda ────────────────────────────────
 function renderRound() {
   const grid     = document.getElementById('captcha-grid');
   const question = document.getElementById('captcha-question');
@@ -35,23 +47,19 @@ function renderRound() {
   feedback.textContent = '';
   feedback.className   = 'captcha-feedback';
 
-  // Elegir personaje objetivo que no se haya usado
   const available = CHARACTERS.filter(c => !usedTargets.includes(c.name));
   currentTarget   = available[Math.floor(Math.random() * available.length)];
   usedTargets.push(currentTarget.name);
 
   question.textContent = `¿Cuál es ${currentTarget.name}?`;
 
-  // Barajar personajes para la grilla
   const shuffled = shuffle(CHARACTERS);
   grid.innerHTML = '';
 
   shuffled.forEach(char => {
     const btn = document.createElement('button');
     btn.className = 'captcha-char';
-    btn.innerHTML = `
-      <img src="${char.file}" alt="${char.name}" draggable="false" />
-    `;
+    btn.innerHTML = `<img src="${char.file}" alt="${char.name}" draggable="false" />`;
     btn.addEventListener('click', () => handleAnswer(char.name));
     grid.appendChild(btn);
   });
@@ -69,7 +77,7 @@ function handleAnswer(chosen) {
     feedback.className   = 'captcha-feedback success';
 
     [...grid.querySelectorAll('.captcha-char')].forEach(btn => {
-      if (btn.querySelector('img').alt === chosen) { // ← ARREGLADO
+      if (btn.querySelector('img').alt === chosen) {
         btn.classList.add('correct');
       }
       btn.disabled = true;
@@ -99,7 +107,7 @@ function handleAnswer(chosen) {
     box.addEventListener('animationend', () => box.classList.remove('shake'), { once: true });
 
     [...grid.querySelectorAll('.captcha-char')].forEach(btn => {
-      if (btn.querySelector('img').alt === chosen) { // ← ARREGLADO
+      if (btn.querySelector('img').alt === chosen) {
         btn.classList.add('wrong');
         setTimeout(() => btn.classList.remove('wrong'), 600);
       }
@@ -109,10 +117,13 @@ function handleAnswer(chosen) {
 
 // ── Abrir página tras pasar el CAPTCHA ──────────────────
 function openPage() {
+  // Guardar cookie 30 días → la próxima vez salta el CAPTCHA
+  const expires = new Date(Date.now() + 30 * 864e5).toUTCString();
+  document.cookie = `ib_passed=1; expires=${expires}; path=/; SameSite=Lax`;
+
   const overlay = document.getElementById('captcha-overlay');
   overlay.classList.add('captcha-exit');
 
-  // Registrar la visita (tracker.js)
   if (typeof registerVisit === 'function') registerVisit();
 
   overlay.addEventListener('animationend', () => {
@@ -123,6 +134,16 @@ function openPage() {
 
 // ── Inicializar ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+
+  // ✅ ¿Ya pasó el CAPTCHA antes? → entrar directo
+  if (getCookie('ib_passed') === '1') {
+    document.getElementById('captcha-overlay').style.display = 'none';
+    document.body.classList.remove('locked');
+    if (typeof registerVisit === 'function') registerVisit();
+    return;
+  }
+
+  // Primera vez → mostrar CAPTCHA
   document.body.classList.add('locked');
   renderRound();
-});     
+});
