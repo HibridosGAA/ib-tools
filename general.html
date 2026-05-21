@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTM — Inicio</title>
+  <meta name="robots" content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    /* ── General page específico ── */
+    .general-wrap {
+      position: relative;
+      z-index: 5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      gap: 3rem;
+    }
+
+    /* Logo central */
+    .gen-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+
+    .gen-logo-img {
+      max-width: 320px;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 4px 32px rgba(255,255,255,0.1));
+    }
+
+    .gen-logo-mark {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      padding: 0.3rem 0.8rem;
+      border: 2px solid #fff;
+      border-radius: 8px;
+    }
+
+    .gen-sub {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7a7870;
+      margin-top: 0.25rem;
+    }
+
+    /* Botones de navegación */
+    .gen-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 640px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.35s;
+    }
+
+    .gen-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 2rem 1.75rem;
+      background: #0e0e0e;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gen-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .gen-btn-a:hover { border-color: #4a8fe8; }
+    .gen-btn-b:hover { border-color: #6bcfb0; }
+
+    .gen-btn::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 15%; bottom: 15%;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      opacity: 0;
+      transition: opacity 0.3s ease, top 0.3s ease, bottom 0.3s ease;
+    }
+    .gen-btn-a::before { background: #4a8fe8; }
+    .gen-btn-b::before { background: #6bcfb0; }
+
+    .gen-btn:hover::before { opacity: 1; top: 8%; bottom: 8%; }
+
+    .gen-btn-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .gen-btn-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .gen-btn-a .gen-btn-label { color: #4a8fe8; }
+    .gen-btn-b .gen-btn-label { color: #6bcfb0; }
+
+    .gen-btn-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #e8e6e0;
+      line-height: 1.2;
+      transition: color 0.3s ease;
+    }
+    .gen-btn-a:hover .gen-btn-title { color: #4a8fe8; }
+    .gen-btn-b:hover .gen-btn-title { color: #6bcfb0; }
+
+    .gen-btn-desc {
+      font-size: 0.82rem;
+      color: #7a7870;
+      line-height: 1.5;
+    }
+
+    .gen-btn-arrow {
+      position: absolute;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      font-size: 1rem;
+      color: #3a3830;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .gen-btn-a:hover .gen-btn-arrow { transform: translate(3px,-3px); color: #4a8fe8; }
+    .gen-btn-b:hover .gen-btn-arrow { transform: translate(3px,-3px); color: #6bcfb0; }
+
+    /* Footer */
+    .gen-footer {
+      font-size: 0.75rem;
+      color: #3a3830;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.55s;
+    }
+
+    @media (max-width: 560px) {
+      .gen-nav { grid-template-columns: 1fr; max-width: 360px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPTCHA — mismo que index.html -->
+  <div id="captcha-overlay" class="captcha-overlay">
+    <div class="captcha-box">
+      <div class="captcha-logo">
+        <span class="logo-mark">CTM</span>
+      </div>
+      <p class="captcha-instruction">Antes de entrar, demuestra que no eres therian</p>
+      <div class="captcha-challenge">
+        <p class="captcha-question" id="captcha-question">¿Quién es...?</p>
+        <div class="captcha-grid" id="captcha-grid"></div>
+      </div>
+      <p class="captcha-feedback" id="captcha-feedback"></p>
+      <div class="captcha-progress">
+        <span class="dot active" id="dot-0"></span>
+        <span class="dot"        id="dot-1"></span>
+        <span class="dot"        id="dot-2"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fondo -->
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- Contenido principal -->
+  <div class="general-wrap">
+
+    <!-- Logo / título -->
+    <div class="gen-logo">
+      <img
+        src="assets/title1.jpg"
+        alt="CTM"
+        class="gen-logo-img"
+        onerror="this.style.display='none'; document.getElementById('gen-logo-fallback').style.display='flex';"
+      />
+      <span class="gen-logo-mark" id="gen-logo-fallback" style="display:none;">CTM</span>
+      <p class="gen-sub">¿CHOOSE p capibara?</p>
+    </div>
+
+    <!-- Botones de navegación -->
+    <nav class="gen-nav">
+
+      <!-- Botón → Herramientas IB -->
+      <a href="index.html" class="gen-btn gen-btn-a">
+        <span class="gen-btn-icon">CTM</span>
+        <span class="gen-btn-label">Recursos</span>
+        <h2 class="gen-btn-title">Herramientas IB</h2>
+        <p class="gen-btn-desc">Calcu, IAs de ejemplo, biología, blockly y más.</p>
+        <span class="gen-btn-arrow">→</span>
+      </a>
+
+      <!-- Botón → Preguntas -->
+      <a href="preguntas.html" class="gen-btn gen-btn-b">
+        <span class="gen-btn-icon">CTM</span>
+        <span class="gen-btn-label">Práctica</span>
+        <h2 class="gen-btn-title">Preguntas</h2>
+        <p class="gen-btn-desc">Pega preguntas generadas por IA y practica al toque.</p>
+        <span class="gen-btn-arrow">→</span>
+      </a>
+
+    </nav>
+
+    <p class="gen-footer">Con fe progresa la página progresa</p>
+  </div>
+
+  <script src="js/captcha.js"></script>
+  <script src="js/tracker.js"></script>
+</body>
+</html>
