@@ -3,771 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Preguntas — CTM</title>
+  <title>Práctica — CTM</title>
   <meta name="robots" content="noindex" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-
   <style>
-    /* ─────────────────────────────────────────
-       VARIABLES EXTRA
-    ───────────────────────────────────────── */
-    :root {
-      --green:  #6be8a8;
-      --red:    #e86b6b;
-      --blue:   #4a8fe8;
-      --mono:   'DM Mono', monospace;
+    .pq-hub-wrap {
+      position: relative; z-index: 5;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 3rem 2rem; gap: 3rem;
     }
-
-    /* ─────────────────────────────────────────
-       LAYOUT BASE
-    ───────────────────────────────────────── */
-    .pq-wrap {
-      position: relative;
-      z-index: 5;
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 5rem;
-    }
-
-    /* Back link */
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: #7a7870;
-      font-size: 0.82rem;
-      text-decoration: none;
-      margin-bottom: 2.5rem;
-      transition: color 0.2s;
-      letter-spacing: 0.04em;
-    }
-    .back-link:hover { color: #fff; }
-
-    /* ─────────────────────────────────────────
-       HEADER
-    ───────────────────────────────────────── */
-    .pq-header {
-      margin-bottom: 2.5rem;
+    .pq-hub-header {
+      text-align: center;
       opacity: 0;
       animation: fadeUp 0.6s ease forwards 0.1s;
     }
-
-    .pq-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #6bcfb0;
+    .pq-hub-label {
+      font-size: 0.7rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #6bcfb0;
       margin-bottom: 0.5rem;
     }
-
-    .pq-title {
+    .pq-hub-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 600;
-      color: #e8e6e0;
-      line-height: 1.1;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 600; color: #e8e6e0; line-height: 1.1;
     }
-
-    .pq-title em { font-style: italic; color: #6bcfb0; }
-
-    /* ─────────────────────────────────────────
-       PROMPT BOX (instrucciones para la IA)
-    ───────────────────────────────────────── */
-    .prompt-section {
-      background: #0a0a0a;
-      border: 1px solid rgba(107,207,176,0.2);
-      border-radius: 14px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.2s;
+    .pq-hub-title em { font-style: italic; color: #6bcfb0; }
+    .pq-hub-sub {
+      font-size: 0.85rem; color: #7a7870;
+      margin-top: 0.75rem; letter-spacing: 0.02em;
     }
-
-    .prompt-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-      gap: 1rem;
+    .pq-hub-nav {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.25rem; width: 100%; max-width: 600px;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.3s;
     }
-
-    .prompt-title {
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #6bcfb0;
-      font-weight: 600;
-    }
-
-    .copy-btn {
-      background: rgba(107,207,176,0.1);
-      border: 1px solid rgba(107,207,176,0.3);
-      color: #6bcfb0;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.35rem 0.85rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .copy-btn:hover { background: rgba(107,207,176,0.2); }
-    .copy-btn.copied { background: rgba(107,232,168,0.2); color: var(--green); }
-
-    .prompt-box {
-      background: #050505;
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 8px;
-      padding: 1rem 1.2rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.78rem;
-      color: #a8a090;
-      line-height: 1.7;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 260px;
-      overflow-y: auto;
-      user-select: all;
-    }
-
-    .prompt-box::-webkit-scrollbar { width: 4px; }
-    .prompt-box::-webkit-scrollbar-track { background: transparent; }
-    .prompt-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-
-    /* ─────────────────────────────────────────
-       PASTE AREA
-    ───────────────────────────────────────── */
-    .paste-section {
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.3s;
-    }
-
-    .paste-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #7a7870;
-      margin-bottom: 0.6rem;
-      display: block;
-    }
-
-    #json-input {
-      width: 100%;
-      min-height: 130px;
-      background: #0a0a0a;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      color: #e8e6e0;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.78rem;
-      padding: 1rem 1.2rem;
-      resize: vertical;
-      outline: none;
-      transition: border-color 0.2s;
-      line-height: 1.6;
-    }
-    #json-input:focus { border-color: #6bcfb0; }
-    #json-input::placeholder { color: #3a3830; }
-
-    .start-btn {
-      margin-top: 0.75rem;
-      background: #6bcfb0;
-      color: #000;
-      border: none;
-      padding: 0.85rem 2.5rem;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
-      letter-spacing: 0.02em;
-    }
-    .start-btn:hover { opacity: 0.85; transform: translateY(-2px); }
-
-    .parse-error {
-      color: var(--red);
-      font-size: 0.82rem;
-      margin-top: 0.5rem;
-      min-height: 1.2em;
-    }
-
-    /* ─────────────────────────────────────────
-       QUIZ
-    ───────────────────────────────────────── */
-    #quiz-section { display: none; }
-
-    /* Progress bar */
-    .quiz-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-    }
-
-    .quiz-counter {
-      font-size: 0.78rem;
-      color: #7a7870;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.08em;
-    }
-
-    .quiz-score-badge {
-      font-size: 0.78rem;
-      color: #7a7870;
-      font-family: 'DM Mono', monospace;
-    }
-    .quiz-score-badge span { color: var(--green); }
-
-    .progress-bar-wrap {
-      height: 3px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 2px;
-      margin-bottom: 2rem;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: #6bcfb0;
-      border-radius: 2px;
-      transition: width 0.4s ease;
-      width: 0%;
-    }
-
-    /* Question card */
-    .question-card {
+    .pq-btn {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: flex-start; gap: 0.6rem;
+      padding: 2rem 1.75rem;
       background: #0e0e0e;
-      border: 1px solid rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.09);
       border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 1.25rem;
+      text-decoration: none; color: inherit; overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
-
-    .question-num {
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #6bcfb0;
-      margin-bottom: 0.75rem;
-      font-weight: 600;
+    .pq-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .pq-btn-a:hover { border-color: #6bcfb0; }
+    .pq-btn-b:hover { border-color: #b06be8; }
+    .pq-btn::before {
+      content: ''; position: absolute;
+      left: 0; top: 15%; bottom: 15%; width: 3px;
+      border-radius: 0 3px 3px 0; opacity: 0;
+      transition: opacity 0.3s ease, top 0.3s ease, bottom 0.3s ease;
     }
-
-    .question-text {
+    .pq-btn-a::before { background: #6bcfb0; }
+    .pq-btn-b::before { background: #b06be8; }
+    .pq-btn:hover::before { opacity: 1; top: 8%; bottom: 8%; }
+    .pq-btn-icon { font-size: 2rem; line-height: 1; }
+    .pq-btn-tag {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .pq-btn-a .pq-btn-tag { color: #6bcfb0; }
+    .pq-btn-b .pq-btn-tag { color: #b06be8; }
+    .pq-btn-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.45rem;
-      font-weight: 600;
-      color: #e8e6e0;
-      line-height: 1.4;
+      font-size: 1.6rem; font-weight: 600;
+      color: #e8e6e0; line-height: 1.2;
+      transition: color 0.3s ease;
     }
-
-    /* Options */
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 1rem;
+    .pq-btn-a:hover .pq-btn-title { color: #6bcfb0; }
+    .pq-btn-b:hover .pq-btn-title { color: #b06be8; }
+    .pq-btn-desc { font-size: 0.82rem; color: #7a7870; line-height: 1.5; }
+    .pq-btn-arrow {
+      position: absolute; bottom: 1.25rem; right: 1.25rem;
+      font-size: 1rem; color: #3a3830;
+      transition: transform 0.3s ease, color 0.3s ease;
     }
-
-    .option-btn {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-      background: #0a0a0a;
-      border: 1.5px solid rgba(255,255,255,0.07);
-      border-radius: 10px;
-      padding: 0.9rem 1.1rem;
-      cursor: pointer;
-      text-align: left;
-      color: #e8e6e0;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      transition: border-color 0.2s, background 0.2s, transform 0.15s;
-      width: 100%;
+    .pq-btn-a:hover .pq-btn-arrow { transform: translate(3px,-3px); color: #6bcfb0; }
+    .pq-btn-b:hover .pq-btn-arrow { transform: translate(3px,-3px); color: #b06be8; }
+    .back-link {
+      position: absolute; top: 2rem; left: 2rem;
+      color: #7a7870; font-size: 0.82rem; text-decoration: none;
+      letter-spacing: 0.04em; transition: color 0.2s;
+      opacity: 0; animation: fadeUp 0.5s ease forwards 0s;
     }
-
-    .option-btn:not(:disabled):hover {
-      border-color: rgba(107,207,176,0.4);
-      background: rgba(107,207,176,0.04);
-      transform: translateX(3px);
+    .back-link:hover { color: #fff; }
+    @media (max-width: 520px) {
+      .pq-hub-nav { grid-template-columns: 1fr; max-width: 320px; }
+      .back-link { position: static; margin-bottom: 1rem; }
     }
-
-    .option-btn:disabled { cursor: default; }
-
-    .option-letter {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: #4a4840;
-      background: rgba(255,255,255,0.04);
-      border-radius: 5px;
-      padding: 0.15rem 0.4rem;
-      flex-shrink: 0;
-      margin-top: 0.1rem;
-      transition: all 0.2s;
-    }
-
-    /* States */
-    .option-btn.correct {
-      border-color: var(--green);
-      background: rgba(107,232,168,0.08);
-    }
-    .option-btn.correct .option-letter {
-      background: var(--green);
-      color: #000;
-    }
-
-    .option-btn.wrong {
-      border-color: var(--red);
-      background: rgba(232,107,107,0.08);
-    }
-    .option-btn.wrong .option-letter {
-      background: var(--red);
-      color: #000;
-    }
-
-    .option-btn.revealed {
-      border-color: rgba(255,255,255,0.04);
-      opacity: 0.45;
-    }
-
-    /* Explanation box */
-    .explanation-box {
-      display: none;
-      background: #050505;
-      border-radius: 10px;
-      padding: 1rem 1.25rem;
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      line-height: 1.65;
-      border-left: 3px solid;
-      animation: fadeUp 0.3s ease;
-    }
-
-    .explanation-box.show { display: block; }
-
-    .explanation-box.correct-exp {
-      border-color: var(--green);
-      color: #9ee8c5;
-    }
-
-    .explanation-box.wrong-exp {
-      border-color: var(--red);
-      color: #e8a0a0;
-    }
-
-    .exp-tag {
-      font-size: 0.68rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-      display: block;
-    }
-
-    .correct-exp .exp-tag { color: var(--green); }
-    .wrong-exp   .exp-tag { color: var(--red); }
-
-    /* Next button */
-    .next-btn {
-      display: none;
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.12);
-      color: #e8e6e0;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.8rem 2rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 0.5rem;
-    }
-    .next-btn:hover { border-color: #6bcfb0; color: #6bcfb0; transform: translateX(4px); }
-
-    /* ─────────────────────────────────────────
-       RESULTS
-    ───────────────────────────────────────── */
-    #results-section {
-      display: none;
-      text-align: center;
-      padding: 3rem 1rem;
-      animation: fadeUp 0.6s ease;
-    }
-
-    .results-emoji { font-size: 4rem; margin-bottom: 1rem; }
-
-    .results-title {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 2.5rem;
-      font-weight: 600;
-      color: #e8e6e0;
-      margin-bottom: 0.5rem;
-    }
-
-    .results-score {
-      font-family: 'DM Mono', monospace;
-      font-size: 3.5rem;
-      font-weight: 500;
-      margin: 1rem 0;
-    }
-
-    .results-sub {
-      font-size: 0.9rem;
-      color: #7a7870;
-      margin-bottom: 2rem;
-    }
-
-    .results-restart {
-      background: #6bcfb0;
-      color: #000;
-      border: none;
-      padding: 0.85rem 2.5rem;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: opacity 0.2s;
-      margin-right: 0.75rem;
-    }
-    .results-restart:hover { opacity: 0.85; }
-
-    .results-back {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #7a7870;
-      padding: 0.85rem 2rem;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-      display: inline-block;
-    }
-    .results-back:hover { border-color: #fff; color: #fff; }
   </style>
 </head>
 <body>
-
   <div class="bg-grid"></div>
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-orb orb-3"></div>
 
-  <div class="pq-wrap">
+  <a href="general.html" class="back-link">← Volver</a>
 
-    <a href="general.html" class="back-link">← Volver</a>
-
-    <!-- Header -->
-    <div class="pq-header">
-      <p class="pq-label">Práctica IB</p>
-      <h1 class="pq-title">Modo <em>Preguntas</em></h1>
+  <div class="pq-hub-wrap">
+    <div class="pq-hub-header">
+      <p class="pq-hub-label">Práctica IB</p>
+      <h1 class="pq-hub-title">Modo <em>Preguntas</em></h1>
+      <p class="pq-hub-sub">¿Con IA tuya o con la nuestra?</p>
     </div>
 
-    <!-- ══════════════════════════════════════
-         PROMPT PARA LA IA
-    ══════════════════════════════════════ -->
-    <div class="prompt-section">
-      <div class="prompt-header">
-        <span class="prompt-title"> Prompt — cópialo y dáselo a tu IA gaaaa</span>
-        <button class="copy-btn" id="copy-prompt-btn" onclick="copyPrompt()">Copiar</button>
-      </div>
-      <div class="prompt-box" id="prompt-text">Genera [N] preguntas de opción múltiple sobre [TEMA] para el IB.
+    <nav class="pq-hub-nav">
 
-Devuelve ÚNICAMENTE un array JSON válido con este formato exacto, sin texto extra antes ni después:
+      <a href="tuia.html" class="pq-btn pq-btn-a">
+        <span class="pq-btn-icon"></span>
+        <span class="pq-btn-tag">Preguntas con IA</span>
+        <h2 class="pq-btn-title">IA</h2>
+        <p class="pq-btn-desc">Genera preguntas con ChatGPT, Claude o Gemini.</p>
+        <span class="pq-btn-arrow">→</span>
+      </a>
 
-[
-  {
-    "pregunta": "Texto completo de la pregunta",
-    "opciones": ["Opción A", "Opción B", "Opción C", "Opción D"],
-    "correcta": 0,
-    "explicaciones": [
-      "Opción A: Por qué es correcta o incorrecta...",
-      "Opción B: Por qué es correcta o incorrecta...",
-      "Opción C: Por qué es correcta o incorrecta...",
-      "Opción D: Por qué es correcta o incorrecta..."
-    ]
-  }
-]
+      <a href="miia.html" class="pq-btn pq-btn-b">
+        <span class="pq-btn-icon"></span>
+        <span class="pq-btn-tag">En mantenimiento</span>
+        <h2 class="pq-btn-title">CTM.ia</h2>
+        <p class="pq-btn-desc">Con fe progresa.</p>
+        <span class="pq-btn-arrow">→</span>
+      </a>
 
-Reglas:
-- "correcta" es el índice (0, 1, 2 o 3) de la opción correcta.
-- "explicaciones" tiene 4 elementos, uno por opción, explicando por qué es correcta o incorrecta.
-- Las opciones incorrectas deben ser plausibles pero claramente erróneas.
-- Responde SOLO con el JSON, nada más.</div>
-    </div>
-
-    <!-- ══════════════════════════════════════
-         PEGAR JSON
-    ══════════════════════════════════════ -->
-    <div class="paste-section" id="paste-section">
-      <label class="paste-label" for="json-input">Pega aquí el JSON que te generó la IA</label>
-      <textarea
-        id="json-input"
-        placeholder='[{"pregunta": "...", "opciones": [...], "correcta": 0, "explicaciones": [...]}]'
-        spellcheck="false"
-      ></textarea>
-      <br/>
-      <button class="start-btn" onclick="startQuiz()">▶ Iniciar Quiz</button>
-      <p class="parse-error" id="parse-error"></p>
-    </div>
-
-    <!-- ══════════════════════════════════════
-         QUIZ
-    ══════════════════════════════════════ -->
-    <div id="quiz-section">
-
-      <div class="quiz-meta">
-        <span class="quiz-counter" id="quiz-counter">Pregunta 1 / 10</span>
-        <span class="quiz-score-badge">Correctas: <span id="score-display">0</span></span>
-      </div>
-
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" id="progress-bar"></div>
-      </div>
-
-      <div class="question-card">
-        <p class="question-num" id="question-num">Pregunta 1</p>
-        <p class="question-text" id="question-text">—</p>
-      </div>
-
-      <div class="options-grid" id="options-grid"></div>
-
-      <div class="explanation-box" id="explanation-box">
-        <span class="exp-tag" id="exp-tag">—</span>
-        <span id="exp-text">—</span>
-      </div>
-
-      <button class="next-btn" id="next-btn" onclick="nextQuestion()">
-        Siguiente →
-      </button>
-
-    </div>
-
-    <!-- ══════════════════════════════════════
-         RESULTADOS
-    ══════════════════════════════════════ -->
-    <div id="results-section">
-      <div class="results-emoji" id="results-emoji"></div>
-      <h2 class="results-title" id="results-title">¡Ya estas ready!</h2>
-      <div class="results-score" id="results-score-text">—</div>
-      <p class="results-sub" id="results-sub">—</p>
-      <button class="results-restart" onclick="restartQuiz()">Intentar de nuevo</button>
-      <a href="general.html" class="results-back">← Inicio</a>
-    </div>
-
+    </nav>
   </div>
-
-  <script>
-    // ── Variables del quiz ─────────────────────────────────
-    let questions    = [];
-    let currentIndex = 0;
-    let score        = 0;
-    const LETTERS    = ['A', 'B', 'C', 'D'];
-
-    // ── Copiar el prompt ───────────────────────────────────
-    function copyPrompt() {
-      const text = document.getElementById('prompt-text').innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.getElementById('copy-prompt-btn');
-        btn.textContent = '✓ Copiado';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copiar';
-          btn.classList.remove('copied');
-        }, 2000);
-      });
-    }
-
-    // ── Iniciar quiz ───────────────────────────────────────
-    function startQuiz() {
-      const raw       = document.getElementById('json-input').value.trim();
-      const errorEl   = document.getElementById('parse-error');
-      errorEl.textContent = '';
-
-      if (!raw) {
-        errorEl.textContent = 'Pega el JSON primero.';
-        return;
-      }
-
-      let parsed;
-      try {
-        parsed = JSON.parse(raw);
-      } catch (e) {
-        errorEl.textContent = `JSON inválido: ${e.message}`;
-        return;
-      }
-
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        errorEl.textContent = 'El JSON debe ser un array con al menos una pregunta.';
-        return;
-      }
-
-      // Validar estructura básica
-      for (let i = 0; i < parsed.length; i++) {
-        const q = parsed[i];
-        if (!q.pregunta || !Array.isArray(q.opciones) || q.opciones.length < 2 ||
-            typeof q.correcta !== 'number' || !Array.isArray(q.explicaciones)) {
-          errorEl.textContent = `Pregunta ${i+1} tiene formato incorrecto. Revisa el JSON.`;
-          return;
-        }
-      }
-
-      questions    = parsed;
-      currentIndex = 0;
-      score        = 0;
-
-      document.getElementById('paste-section').style.display = 'none';
-      document.getElementById('quiz-section').style.display  = 'block';
-      document.getElementById('score-display').textContent   = '0';
-
-      renderQuestion();
-    }
-
-    // ── Renderizar pregunta ────────────────────────────────
-    function renderQuestion() {
-      const q         = questions[currentIndex];
-      const total     = questions.length;
-      const optGrid   = document.getElementById('options-grid');
-      const expBox    = document.getElementById('explanation-box');
-      const nextBtn   = document.getElementById('next-btn');
-
-      // Actualizar meta
-      document.getElementById('quiz-counter').textContent  = `Pregunta ${currentIndex + 1} / ${total}`;
-      document.getElementById('question-num').textContent  = `Pregunta ${currentIndex + 1}`;
-      document.getElementById('question-text').textContent = q.pregunta;
-      document.getElementById('progress-bar').style.width  = `${(currentIndex / total) * 100}%`;
-
-      // Reset
-      expBox.className   = 'explanation-box';
-      expBox.style.display = 'none';
-      nextBtn.style.display = 'none';
-      optGrid.innerHTML  = '';
-
-      // Renderizar opciones
-      q.opciones.forEach((text, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerHTML = `<span class="option-letter">${LETTERS[i]}</span><span>${text}</span>`;
-        btn.addEventListener('click', () => handleAnswer(i));
-        optGrid.appendChild(btn);
-      });
-    }
-
-    // ── Manejar respuesta ──────────────────────────────────
-    function handleAnswer(chosen) {
-      const q       = questions[currentIndex];
-      const optBtns = document.querySelectorAll('.option-btn');
-      const expBox  = document.getElementById('explanation-box');
-      const expTag  = document.getElementById('exp-tag');
-      const expText = document.getElementById('exp-text');
-      const nextBtn = document.getElementById('next-btn');
-
-      // Deshabilitar todos
-      optBtns.forEach(b => b.disabled = true);
-
-      const isCorrect = chosen === q.correcta;
-      if (isCorrect) score++;
-      document.getElementById('score-display').textContent = score;
-
-      // Colorear opciones
-      optBtns.forEach((btn, i) => {
-        if (i === q.correcta) {
-          btn.classList.add('correct');
-        } else if (i === chosen && !isCorrect) {
-          btn.classList.add('wrong');
-        } else {
-          btn.classList.add('revealed');
-        }
-      });
-
-      // Explicación de la opción elegida
-      const expForChosen = q.explicaciones[chosen] || '—';
-
-      if (isCorrect) {
-        expBox.className     = 'explanation-box correct-exp show';
-        expTag.textContent   = '✓ Correcto';
-        expText.textContent  = expForChosen;
-      } else {
-        expBox.className     = 'explanation-box wrong-exp show';
-        expTag.textContent   = `✗ Incorrecto — la correcta era ${LETTERS[q.correcta]}`;
-        // Mostrar por qué la elegida estaba mal + por qué la correcta es correcta
-        const expCorrect = q.explicaciones[q.correcta] || '—';
-        expText.innerHTML = `<strong>Tu opción (${LETTERS[chosen]}):</strong> ${expForChosen}<br/><br/><strong style="color:#6be8a8">Correcta (${LETTERS[q.correcta]}):</strong> ${expCorrect}`;
-      }
-
-      expBox.style.display = 'block';
-      nextBtn.style.display = 'block';
-      nextBtn.textContent   = currentIndex < questions.length - 1 ? 'Siguiente →' : 'Ver resultados →';
-    }
-
-    // ── Siguiente pregunta ─────────────────────────────────
-    function nextQuestion() {
-      currentIndex++;
-      if (currentIndex >= questions.length) {
-        showResults();
-      } else {
-        renderQuestion();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-
-    // ── Resultados ─────────────────────────────────────────
-    function showResults() {
-      document.getElementById('quiz-section').style.display     = 'none';
-      document.getElementById('results-section').style.display  = 'block';
-
-      const total   = questions.length;
-      const pct     = Math.round((score / total) * 100);
-
-      let emoji, title, sub;
-
-      if (pct === 100) {
-        emoji = '🤯'; title = '¡Perfecto!'; sub = 'Brutal cero errores';
-      } else if (pct >= 80) {
-        emoji = ''; title = '¡Muy bien!'; sub = 'Casi. Revisa las que fallaste.';
-      } else if (pct >= 60) {
-        emoji = ''; title = 'Bien, pero...'; sub = 'Hay cositas que repasar.';
-      } else if (pct >= 40) {
-        emoji = '💩'; title = 'Tamos graves'; sub = 'Se nota que es antes de repasar';
-      } else {
-        emoji = '💀'; title = 'Preocupate...'; sub = 'El tiempo es relativo';
-      }
-
-      document.getElementById('results-emoji').textContent = emoji;
-      document.getElementById('results-title').textContent = title;
-      document.getElementById('results-sub').textContent   = sub;
-      document.getElementById('results-score-text').innerHTML =
-        `<span style="color:var(--green)">${score}</span> / ${total}`;
-      document.getElementById('results-score-text').style.color = pct >= 60 ? 'var(--green)' : 'var(--red)';
-
-      // Progress bar al 100%
-      document.getElementById('progress-bar').style.width = '100%';
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // ── Reiniciar ──────────────────────────────────────────
-    function restartQuiz() {
-      currentIndex = 0;
-      score        = 0;
-
-      document.getElementById('results-section').style.display = 'none';
-      document.getElementById('quiz-section').style.display    = 'block';
-      document.getElementById('score-display').textContent     = '0';
-
-      renderQuestion();
-    }
-  </script>
 </body>
 </html>
