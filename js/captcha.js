@@ -16,6 +16,7 @@ let currentRound  = 0;
 let usedTargets   = [];
 let currentTarget = null;
 
+
 // ── Leer cookie ──────────────────────────────────────────
 function getCookie(name) {
   return document.cookie.split('; ').reduce((acc, part) => {
