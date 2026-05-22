@@ -9,7 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  
   <style>
+
     .pq-hub-wrap {
       position: relative; z-index: 5;
       min-height: 100vh;
@@ -89,17 +91,25 @@
     .pq-btn-a:hover .pq-btn-arrow { transform: translate(3px,-3px); color: #6bcfb0; }
     .pq-btn-b:hover .pq-btn-arrow { transform: translate(3px,-3px); color: #b06be8; }
     .back-link {
-      position: absolute; top: 2rem; left: 2rem;
-      color: #7a7870; font-size: 0.82rem; text-decoration: none;
-      letter-spacing: 0.04em; transition: color 0.2s;
-      opacity: 0; animation: fadeUp 0.5s ease forwards 0s;
+      position: absolute; 
+      top: 2rem; 
+      left: 2rem;
+      z-index: 100; /* Lo pone por encima de todo */
+      color: #7a7870; 
+      font-size: 0.82rem; 
+      text-decoration: none;
+      letter-spacing: 0.04em; 
+      transition: color 0.2s;
+      opacity: 1; /* Lo hace visible inmediatamente */
     }
     .back-link:hover { color: #fff; }
     @media (max-width: 520px) {
       .pq-hub-nav { grid-template-columns: 1fr; max-width: 320px; }
       .back-link { position: static; margin-bottom: 1rem; }
     }
+
   </style>
+
 </head>
 <body>
   <div class="bg-grid"></div>
